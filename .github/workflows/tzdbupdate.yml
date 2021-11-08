@@ -46,7 +46,8 @@ jobs:
       run: |
         git clone https://github.com/JodaOrg/tz.git
         cd tz
-        LATEST_TZDB=$(git describe --abbrev=0 --tags)
+        LATEST_TZDB_COMMIT=$(git describe --abbrev=0 --tags)
+        LATEST_TZDB=${LATEST_TZDB_COMMIT:0:5}
         echo "latest: $LATEST_TZDB"
         echo "LATEST_TZDB=$LATEST_TZDB" >> $GITHUB_ENV
     - name: Compare versions
