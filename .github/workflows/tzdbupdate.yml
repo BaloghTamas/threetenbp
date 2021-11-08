@@ -66,8 +66,8 @@ jobs:
     - name: Copy rearguard files
       if: env.NOOP != 'true'
       run: |
-        mkdir -p src/tzdb/${LATEST_TZDB}
-        cp -r target/tz/tzdata${LATEST_TZDB}-rearguard.dir/. src/tzdb/${LATEST_TZDB}
+        mkdir -p src/tzdb/${LATEST_TZDB:0:5}
+        cp -r target/tz/tzdata${LATEST_TZDB:0:5}-rearguard.dir/. src/tzdb/${LATEST_TZDB:0:5}
     - name: Update build with new tzdb
       if: env.NOOP != 'true'
       run: |
