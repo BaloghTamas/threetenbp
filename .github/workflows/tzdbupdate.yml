@@ -46,8 +46,8 @@ jobs:
       run: |
         git clone https://github.com/JodaOrg/tz.git
         cd tz
-        LATEST_TZDB_COMMIT=$(git describe --abbrev=0 --tags)
-        LATEST_TZDB=${LATEST_TZDB_COMMIT:0:5}
+        LATEST_TZDB_TAG=$(git describe --abbrev=0 --tags)
+        LATEST_TZDB=${LATEST_TZDB_TAG:0:5}
         echo "latest: $LATEST_TZDB"
         echo "LATEST_TZDB=$LATEST_TZDB" >> $GITHUB_ENV
     - name: Compare versions
@@ -65,7 +65,7 @@ jobs:
       working-directory: target/tz
       run: |
         git checkout main
-        git reset --hard ${LATEST_TZDB} --
+        git reset --hard ${LATEST_TZDB_TAG} --
         git status
         make rearguard_tarballs
     - name: Copy rearguard files
