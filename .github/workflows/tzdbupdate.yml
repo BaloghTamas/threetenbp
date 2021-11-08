@@ -1,8 +1,12 @@
 name: TZDB check
 
-on:
-  schedule:
-    - cron:  '*/1 * * * *'
+on: 
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - 'master'
 
 jobs:
   tzdbcheck:
@@ -12,7 +16,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        token: ${{ secrets.PERSONAL_TOKEN_GH }}
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Maven cache
       uses: actions/cache@v1
       with:
@@ -42,7 +46,8 @@ jobs:
       run: |
         git clone https://github.com/JodaOrg/tz.git
         cd tz
-        LATEST_TZDB=$(git describe --abbrev=0 --tags)
+        LATEST_TZDB_TAG=$(git describe --abbrev=0 --tags)
+        LATEST_TZDB=${LATEST_TZDB_TAG:0:5}
         echo "latest: $LATEST_TZDB"
         echo "LATEST_TZDB=$LATEST_TZDB" >> $GITHUB_ENV
     - name: Compare versions
@@ -60,13 +65,14 @@ jobs:
       working-directory: target/tz
       run: |
         git checkout main
-        git reset --hard ${LATEST_TZDB} --
+        git reset --hard ${LATEST_TZDB_TAG} --
         git status
         make rearguard_tarballs
     - name: Copy rearguard files
       if: env.NOOP != 'true'
       run: |
         mkdir -p src/tzdb/${LATEST_TZDB:0:5}
+        ls -al target/tz/
         cp -r target/tz/tzdata${LATEST_TZDB:0:5}-rearguard.dir/. src/tzdb/${LATEST_TZDB:0:5}
     - name: Update build with new tzdb
       if: env.NOOP != 'true'
