@@ -71,6 +71,7 @@ jobs:
       if: env.NOOP != 'true'
       run: |
         mkdir -p src/tzdb/${LATEST_TZDB:0:5}
+        ls -al target/tz/
         cp -r target/tz/tzdata${LATEST_TZDB:0:5}-rearguard.dir/. src/tzdb/${LATEST_TZDB:0:5}
     - name: Update build with new tzdb
       if: env.NOOP != 'true'
