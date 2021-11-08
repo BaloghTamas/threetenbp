@@ -1,8 +1,12 @@
 name: TZDB check
 
-on:
-  schedule:
-    - cron:  '*/1 * * * *'
+on: 
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - 'master'
 
 jobs:
   tzdbcheck:
